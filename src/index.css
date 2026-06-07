@@ -1,0 +1,456 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   个人原则库 — 设计系统
+   灵感来源：Apple · Tesla · NIO
+   ============================================ */
+
+:root {
+  /* 暗色基底 */
+  --bg-root: #000000;
+  --bg-primary: #0a0a0c;
+  --bg-secondary: #121215;
+  --bg-card: #161618;
+  --bg-card-hover: #1c1c1f;
+  --bg-surface: #1e1e21;
+  --bg-elevated: #232327;
+  --bg-glass: rgba(28, 28, 30, 0.72);
+
+  /* 文字 */
+  --text-primary: #f5f5f7;
+  --text-secondary: #98989d;
+  --text-tertiary: #6e6e73;
+  --text-muted: #48484d;
+
+  /* 边框 */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  --border-accent: rgba(255, 255, 255, 0.16);
+
+  /* 主题色 — Apple 蓝 + NIO 暖金 */
+  --accent-blue: #0a84ff;
+  --accent-blue-dim: #0066cc;
+  --accent-green: #30d158;
+  --accent-amber: #ff9f0a;
+  --accent-gold: #c8a96e;
+  --accent-rose: #ff375f;
+
+  /* 分类色 — 保持区分度 */
+  --cat-work: #0a84ff;
+  --cat-work-bg: rgba(10, 132, 255, 0.08);
+  --cat-invest: #30d158;
+  --cat-invest-bg: rgba(48, 209, 88, 0.08);
+  --cat-life: #ff9f0a;
+  --cat-life-bg: rgba(255, 159, 10, 0.08);
+
+  /* 玻璃拟态 */
+  --glass-bg: rgba(18, 18, 21, 0.78);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-blur: 24px;
+
+  /* 圆角 */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-2xl: 36px;
+
+  /* 阴影 */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
+  --shadow-glow-blue: 0 0 40px rgba(10, 132, 255, 0.12);
+  --shadow-glow-gold: 0 0 40px rgba(200, 169, 110, 0.1);
+
+  /* 动效 */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+}
+
+/* ============================================
+   全局基础
+   ============================================ */
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text',
+    'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg-root);
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.6;
+}
+
+::selection {
+  background: rgba(10, 132, 255, 0.3);
+  color: var(--text-primary);
+}
+
+/* 滚动条 — 暗色极简 */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-accent); }
+
+/* ============================================
+   排版
+   ============================================ */
+
+h1, h2, h3, h4 {
+  font-weight: 590;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.display-text {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 620;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.headline-text {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 590;
+  letter-spacing: -0.02em;
+}
+
+/* ============================================
+   卡片系统
+   ============================================ */
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.glass-card:hover {
+  background: rgba(28, 28, 30, 0.82);
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-md);
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-elevated {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   按钮系统
+   ============================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 510;
+  letter-spacing: -0.01em;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  outline: none;
+  white-space: nowrap;
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: var(--accent-blue);
+  color: #fff;
+}
+.btn-primary:hover { background: #1a8eff; box-shadow: var(--shadow-glow-blue); }
+
+.btn-secondary {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+}
+.btn-secondary:hover { background: var(--bg-glass); border-color: var(--border-strong); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+}
+.btn-ghost:hover { background: var(--bg-surface); color: var(--text-primary); }
+
+.btn-success {
+  background: var(--accent-green);
+  color: #000;
+}
+.btn-success:hover { filter: brightness(1.1); }
+
+.btn-danger {
+  background: transparent;
+  color: var(--accent-rose);
+  border: 1px solid rgba(255, 55, 95, 0.2);
+}
+.btn-danger:hover { background: rgba(255, 55, 95, 0.08); border-color: rgba(255, 55, 95, 0.3); }
+
+.btn-sm { padding: 6px 14px; font-size: 13px; border-radius: var(--radius-sm); }
+.btn-lg { padding: 14px 28px; font-size: 16px; border-radius: var(--radius-lg); }
+
+/* ============================================
+   标签 / Badge
+   ============================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 510;
+  letter-spacing: 0.01em;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.badge-work { background: var(--cat-work-bg); color: var(--cat-work); }
+.badge-invest { background: var(--cat-invest-bg); color: var(--cat-invest); }
+.badge-life { background: var(--cat-life-bg); color: var(--cat-life); }
+.badge-neutral { background: var(--bg-surface); color: var(--text-secondary); }
+.badge-success { background: rgba(48, 209, 88, 0.1); color: var(--accent-green); }
+.badge-warning { background: rgba(255, 159, 10, 0.1); color: var(--accent-amber); }
+.badge-danger { background: rgba(255, 55, 95, 0.1); color: var(--accent-rose); }
+
+/* ============================================
+   输入框
+   ============================================ */
+
+.input {
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.input::placeholder { color: var(--text-tertiary); }
+.input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.12); }
+
+.textarea {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  outline: none;
+  resize: vertical;
+  min-height: 80px;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.textarea::placeholder { color: var(--text-tertiary); }
+.textarea:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.12); }
+
+/* ============================================
+   引用块 / Blockquote
+   ============================================ */
+
+.quote-block {
+  padding: 14px 18px;
+  background: var(--bg-surface);
+  border-left: 3px solid var(--border-strong);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-style: italic;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.7;
+  font-family: 'Georgia', 'Times New Roman', 'STSong', serif;
+}
+
+/* ============================================
+   统计数字
+   ============================================ */
+
+.stat-number {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 620;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* ============================================
+   Loading / Spinner
+   ============================================ */
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--border-strong);
+  border-top-color: var(--accent-blue);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============================================
+   进度条
+   ============================================ */
+
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--bg-surface);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s var(--ease-out);
+}
+
+/* ============================================
+   星级评分
+   ============================================ */
+
+.star-rating {
+  display: inline-flex;
+  gap: 3px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.star-rating .star {
+  font-size: 20px;
+  color: var(--border-strong);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.star-rating .star.active { color: var(--accent-amber); }
+.star-rating .star:hover { transform: scale(1.15); }
+
+/* ============================================
+   动画工具类
+   ============================================ */
+
+.fade-in {
+  animation: fadeIn var(--duration-normal) var(--ease-out);
+}
+
+.slide-up {
+  animation: slideUp var(--duration-slow) var(--ease-out);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   响应式
+   ============================================ */
+
+@media (max-width: 768px) {
+  :root {
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+  }
+}
+
+/* 移动端触控优化 */
+@media (pointer: coarse) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  button, a {
+    touch-action: manipulation;
+  }
+}
+
+/* ============================================
+   列表入场交错动画
+   ============================================ */
+
+.stagger-list > * {
+  opacity: 0;
+  animation: staggerFadeIn 0.4s var(--ease-out) forwards;
+}
+
+.stagger-list > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-list > *:nth-child(2) { animation-delay: 0.10s; }
+.stagger-list > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-list > *:nth-child(4) { animation-delay: 0.20s; }
+.stagger-list > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-list > *:nth-child(6) { animation-delay: 0.30s; }
+.stagger-list > *:nth-child(7) { animation-delay: 0.35s; }
+.stagger-list > *:nth-child(8) { animation-delay: 0.40s; }
+.stagger-list > *:nth-child(9) { animation-delay: 0.45s; }
+.stagger-list > *:nth-child(10) { animation-delay: 0.50s; }
+
+@keyframes staggerFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   打印样式（用于 PDF 导出）
+   ============================================ */
+
+@media print {
+  body { background: #fff; color: #000; }
+  .no-print { display: none !important; }
+  .glass-card, .card, .card-elevated {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: none;
+  }
+}
