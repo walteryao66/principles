@@ -12,11 +12,13 @@ const CATEGORY_BG: Record<string, string> = {
   work: '#eff6ff',
   invest: '#ecfdf5',
   life: '#fffbeb',
+  constitution: '#faf5ff',
 };
 const CATEGORY_BORDER: Record<string, string> = {
   work: '#bfdbfe',
   invest: '#a7f3d0',
   life: '#fde68a',
+  constitution: '#e9d5ff',
 };
 
 export interface V1Result {
@@ -59,9 +61,9 @@ export function generateV1Client(
   });
 
   // 按分类分组
-  const categories = { work: 0, invest: 0, life: 0 };
+  const categories = { work: 0, invest: 0, life: 0, constitution: 0 };
   const byCategory: Record<string, Principle[]> = {
-    work: [], invest: [], life: [],
+    work: [], invest: [], life: [], constitution: [],
   };
 
   for (const p of merged) {
@@ -96,7 +98,7 @@ function generateHTML(
     year: 'numeric', month: 'long', day: 'numeric',
   });
   const total = principles.length;
-  const catOrder: Category[] = ['work', 'invest', 'life'];
+  const catOrder: Category[] = ['work', 'invest', 'life', 'constitution'];
 
   // 分组：按主题
   function groupByTheme(ps: Principle[]): Record<string, Principle[]> {
@@ -205,6 +207,7 @@ function generateHTML(
         <div class="stat-item"><div class="stat-num">${categories['work'] || 0}</div><div class="stat-label">工作原则</div></div>
         <div class="stat-item"><div class="stat-num">${categories['invest'] || 0}</div><div class="stat-label">投资原则</div></div>
         <div class="stat-item"><div class="stat-num">${categories['life'] || 0}</div><div class="stat-label">生活原则</div></div>
+        <div class="stat-item"><div class="stat-num">${categories['constitution'] || 0}</div><div class="stat-label">原则宪法</div></div>
     </div>
     <div class="version-tag">Version 1.0 · 正式版</div>
     <div class="meta">基于 Ray Dalio 与 Naval Ravikant 原则体系<br/>经个人化定制与沉淀 · ${nowStr}</div>
@@ -228,11 +231,11 @@ function generateMarkdown(
 ): string {
   const nowStr = new Date().toLocaleDateString('zh-CN');
   const total = principles.length;
-  const catOrder: Category[] = ['work', 'invest', 'life'];
+  const catOrder: Category[] = ['work', 'invest', 'life', 'constitution'];
 
   const lines: string[] = [];
   lines.push(`# ${title}\n`);
-  lines.push(`> ${total} 条原则 | 工作 ${categories['work'] || 0} 条 | 投资 ${categories['invest'] || 0} 条 | 生活 ${categories['life'] || 0} 条\n`);
+  lines.push(`> ${total} 条原则 | 工作 ${categories['work'] || 0} 条 | 投资 ${categories['invest'] || 0} 条 | 生活 ${categories['life'] || 0} 条 | 宪法 ${categories['constitution'] || 0} 条\n`);
   lines.push(`> 生成时间：${nowStr}\n`);
 
   for (const cat of catOrder) {

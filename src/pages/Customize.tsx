@@ -25,12 +25,13 @@ import {
 
 type FilterMode = 'all' | 'unpersonalized' | 'personalized' | 'deprecated';
 
-const CATEGORIES: Category[] = ['work', 'invest', 'life'];
+const CATEGORIES: Category[] = ['work', 'invest', 'life', 'constitution'];
 
 const CAT_COLORS: Record<Category, string> = {
   work: '#0a84ff',
   invest: '#30d158',
   life: '#ff9f0a',
+  constitution: '#a78bfa',
 };
 
 export default function Customize() {
@@ -89,11 +90,12 @@ export default function Customize() {
 
   // -------- Derived: themes grouped by category --------
   const themesByCategory = useMemo(() => {
-    const grouped: Record<Category, string[]> = { work: [], invest: [], life: [] };
+    const grouped: Record<Category, string[]> = { work: [], invest: [], life: [], constitution: [] };
     const seen: Record<Category, Set<string>> = {
       work: new Set(),
       invest: new Set(),
       life: new Set(),
+      constitution: new Set(),
     };
 
     principles.forEach((p) => {
@@ -115,6 +117,7 @@ export default function Customize() {
       work: { total: 0, personalized: 0 },
       invest: { total: 0, personalized: 0 },
       life: { total: 0, personalized: 0 },
+      constitution: { total: 0, personalized: 0 },
     };
 
     principles.forEach((p) => {

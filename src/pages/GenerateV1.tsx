@@ -25,12 +25,14 @@ import {
   IconEye,
   IconInfo,
   IconChevronRight,
+  IconBook,
 } from '../components/Icons';
 
 const DARK_COLORS: Record<Category, string> = {
   work: '#0a84ff',
   invest: '#30d158',
   life: '#ff9f0a',
+  constitution: '#a78bfa',
 };
 
 function StatCard({
@@ -141,7 +143,7 @@ export default function GenerateV1() {
   const deprecatedCount = useMemo(() => getDeprecatedIds().size, []);
 
   const categoryCounts = useMemo(() => {
-    const counts: Record<Category, number> = { work: 0, invest: 0, life: 0 };
+    const counts: Record<Category, number> = { work: 0, invest: 0, life: 0, constitution: 0 };
     for (const p of filteredPrinciples) {
       if (p.category in counts) {
         counts[p.category]++;
@@ -156,6 +158,7 @@ export default function GenerateV1() {
       { label: CATEGORY_LABELS.work, count: categoryCounts.work, color: DARK_COLORS.work, icon: <IconZap size={14} className="text-[#0a84ff]" /> },
       { label: CATEGORY_LABELS.invest, count: categoryCounts.invest, color: DARK_COLORS.invest, icon: <IconDiamond size={14} className="text-[#30d158]" /> },
       { label: CATEGORY_LABELS.life, count: categoryCounts.life, color: DARK_COLORS.life, icon: <IconEye size={14} className="text-[#ff9f0a]" /> },
+      { label: CATEGORY_LABELS.constitution, count: categoryCounts.constitution, color: DARK_COLORS.constitution, icon: <IconBook size={14} className="text-[#a78bfa]" /> },
       { label: '已定制', count: personalizedCount, color: '#30d158', icon: <IconStar size={14} filled className="text-[#30d158]" /> },
       { label: '已淘汰', count: deprecatedCount, color: '#86868b', icon: <IconTrash size={14} className="text-[#86868b]" /> },
     ];

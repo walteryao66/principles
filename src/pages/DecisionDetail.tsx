@@ -10,8 +10,9 @@ import { getDecision, getReview, deleteDecision, saveReview, getPrincipleFeedbac
 import { EMBEDDED_PRINCIPLES } from '../data/embedded';
 import {
   CATEGORY_LABELS, EFFECTIVENESS_LABELS, EFFECTIVENESS_COLORS,
+  ADHERENCE_LABELS, ADHERENCE_COLORS,
 } from '../types';
-import type { Decision, Review, Effectiveness, PrincipleFeedback } from '../types';
+import type { Decision, Review, Effectiveness, Adherence, PrincipleFeedback } from '../types';
 import {
   IconPen, IconChevronRight, IconX, IconCheck, IconTrash,
   IconStar, IconTarget, IconClock, IconLightbulb, IconAlert,
@@ -52,6 +53,8 @@ export default function DecisionDetail() {
   // 复盘表单状态
   const [actualOutcome, setActualOutcome] = useState('');
   const [effectiveness, setEffectiveness] = useState<Effectiveness | ''>('');
+  const [adherence, setAdherence] = useState<Adherence | ''>('');
+  const [violatedReason, setViolatedReason] = useState('');
   const [reflection, setReflection] = useState('');
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -74,6 +77,8 @@ export default function DecisionDetail() {
     if (r) {
       setActualOutcome(r.actual_outcome);
       setEffectiveness(r.effectiveness);
+      setAdherence(r.adherence || '');
+      setViolatedReason(r.violated_reason || '');
       setReflection(r.reflection);
     }
     setLoading(false);
@@ -106,6 +111,8 @@ export default function DecisionDetail() {
       decision_id: id,
       actual_outcome: actualOutcome.trim(),
       effectiveness,
+      adherence: adherence,
+      violated_reason: adherence === 'violated' ? violatedReason.trim() : '',
       reflection: reflection.trim(),
       reviewed_at: new Date().toISOString(),
     };
@@ -114,7 +121,7 @@ export default function DecisionDetail() {
     setReview(newReview);
     setShowReviewForm(false);
     setSaving(false);
-  }, [id, actualOutcome, effectiveness, reflection]);
+  }, [id, actualOutcome, effectiveness, adherence, violatedReason, reflection]);
 
   // 编辑复盘
   const handleEditReview = useCallback(() => {
@@ -393,6 +400,91 @@ export default function DecisionDetail() {
               </div>
             </div>
 
+            {/* 是否遵循原则 */}
+            <div>
+              <label className="text-[12px] text-[#86868b] font-medium mb-2.5 block">
+                是否遵循原则 <span className="text-[#6e6e73]">必选</span>
+              </label>
+              <div className="flex gap-2">
+                {(['followed', 'violated', 'not_applicable'] as Adherence[]).map(adh => (
+                  <button
+                    key={adh}
+                    onClick={() => setAdherence(adh)}
+                    className={`flex-1 py-3 rounded-xl text-[13px] font-medium border transition-all ${
+                      adherence === adh
+                        ? 'border-current'
+                        : 'border-transparent text-[#6e6e73] bg-[#121215] hover:bg-white/[0.04]'
+                    }`}
+                    style={{
+                      backgroundColor: adherence === adh
+                        ? `${ADHERENCE_COLORS[adh]}15`
+                        : undefined,
+                      color: adherence === adh
+                        ? ADHERENCE_COLORS[adh]
+                        : undefined,
+                      borderColor: adherence === adh
+                        ? `${ADHERENCE_COLORS[adh]}40`
+                        : undefined,
+                    }}
+                  >
+                    {ADHERENCE_LABELS[adh].split(' ')[0]}
+                    <div className="text-[10px] opacity-70 mt-0.5">
+                      {ADHERENCE_LABELS[adh].split(' ').slice(1).join(' ')}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 违背原则时的主动追问 */}
+            {adherence === 'violated' && (
+              <div className="p-4 bg-[#ff375f]/5 border border-[#ff375f]/10 rounded-xl space-y-3">
+                <div className="flex items-start gap-2">
+                  <IconAlert size={13} className="text-[#ff375f] mt-0.5 shrink-0" />
+                  <p className="text-[12px] text-[#ff375f] font-medium">
+                    你违背了这条原则，花一分钟反思一下
+                  </p>
+                </div>
+
+                <div>
+                  <label className="text-[11px] text-[#86868b] mb-1.5 block">
+                    为什么违背？请诚实回答
+                  </label>
+                  <textarea
+                    value={violatedReason}
+                    onChange={(e) => setViolatedReason(e.target.value)}
+                    placeholder="例如：时间紧迫来不及权衡 / 情绪上头做了冲动决定 / 当时觉得这条原则不适用于这个场景 / 明知应该按原则做但没做到……"
+                    rows={3}
+                    className="w-full px-4 py-3 bg-[#121215] border border-[#ff375f]/15 rounded-xl text-[14px] text-[#f5f5f7] placeholder:text-[#6e6e73] focus:border-[#ff375f]/30 focus:ring-1 focus:ring-[#ff375f]/10 outline-none transition-all resize-y leading-relaxed"
+                  />
+                </div>
+
+                <div className="text-[11px] text-[#98989d] space-y-1">
+                  <p className="font-medium text-[#86868b]">追问自己：</p>
+                  <p>• 如果再来一次，你会在哪个环节做出不同的选择？</p>
+                  <p>• 这条原则在当前场景下真的适用吗？还是原则本身需要修订？</p>
+                  <p>• 你需要的是一次提醒，还是一个更强的执行机制？</p>
+                </div>
+              </div>
+            )}
+
+            {/* 原则不适用时的追问 */}
+            {adherence === 'not_applicable' && (
+              <div className="p-4 bg-white/[0.03] border border-white/[0.06] rounded-xl">
+                <div className="flex items-start gap-2">
+                  <IconLightbulb size={13} className="text-[#86868b] mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-[12px] text-[#86868b] font-medium">
+                      这条原则在这个决策场景下不适用
+                    </p>
+                    <p className="text-[11px] text-[#6e6e73] mt-1">
+                      考虑一下：是否有另一条未被关联的原则更适合这个决策？如果是，在反思笔记中记录下来，下次决策时可以关联它。
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* 反思笔记 */}
             <div>
               <label className="text-[12px] text-[#86868b] font-medium mb-2 block">
@@ -416,6 +508,8 @@ export default function DecisionDetail() {
                     setShowReviewForm(false);
                     setActualOutcome(review.actual_outcome);
                     setEffectiveness(review.effectiveness);
+                    setAdherence(review.adherence || '');
+                    setViolatedReason(review.violated_reason || '');
                     setReflection(review.reflection);
                   } else {
                     setShowReviewForm(false);
@@ -427,9 +521,9 @@ export default function DecisionDetail() {
               </button>
               <button
                 onClick={handleSaveReview}
-                disabled={!effectiveness || !actualOutcome.trim() || saving}
+                disabled={!effectiveness || !adherence || !actualOutcome.trim() || saving}
                 className={`flex-[2] flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-medium transition-all ${
-                  effectiveness && actualOutcome.trim() && !saving
+                  effectiveness && adherence && actualOutcome.trim() && !saving
                     ? 'bg-[#ff9f0a] text-[#0a0a0c] hover:bg-[#ffb023] active:scale-[0.98]'
                     : 'bg-white/[0.06] text-[#48484d] cursor-not-allowed'
                 }`}
@@ -455,10 +549,29 @@ export default function DecisionDetail() {
                 <IconTarget size={12} />
                 {EFFECTIVENESS_LABELS[review.effectiveness as Effectiveness]}
               </span>
+              {review.adherence && (
+                <span
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium"
+                  style={{
+                    color: ADHERENCE_COLORS[review.adherence as Adherence],
+                    backgroundColor: `${ADHERENCE_COLORS[review.adherence as Adherence]}10`,
+                  }}
+                >
+                  {ADHERENCE_LABELS[review.adherence as Adherence]}
+                </span>
+              )}
               <span className="text-[11px] text-[#6e6e73]">
                 {formatDateTime(review.reviewed_at)} 复盘
               </span>
             </div>
+
+            {/* 违背原因 */}
+            {review.adherence === 'violated' && review.violated_reason && (
+              <div className="p-3 bg-[#ff375f]/5 border border-[#ff375f]/10 rounded-lg">
+                <p className="text-[11px] text-[#86868b] font-medium mb-1">违背原因</p>
+                <p className="text-[13px] text-[#98989d] leading-relaxed">{review.violated_reason}</p>
+              </div>
+            )}
 
             {/* 实际结果 */}
             <div>

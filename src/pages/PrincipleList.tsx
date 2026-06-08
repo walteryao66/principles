@@ -14,6 +14,7 @@ const CATEGORY_ICONS: Record<Category, React.FC<{ size?: number; className?: str
   work: IconActivity,
   invest: IconZap,
   life: IconShield,
+  constitution: IconBook,
 }
 
 export default function PrincipleList() {
@@ -67,9 +68,9 @@ export default function PrincipleList() {
   }
 
   // Group by category for category headers
-  const categoryOrder: Category[] = ['work', 'invest', 'life']
+  const categoryOrder: Category[] = ['work', 'invest', 'life', 'constitution']
   const grouped = useMemo(() => {
-    const map: Record<Category, Principle[]> = { work: [], invest: [], life: [] }
+    const map: Record<Category, Principle[]> = { work: [], invest: [], life: [], constitution: [] }
     for (const p of principles) {
       map[p.category].push(p)
     }
@@ -93,7 +94,7 @@ export default function PrincipleList() {
         {/* Row 1: Category pills */}
         <div className="flex flex-wrap gap-1.5 items-center">
           <span className="text-xs font-medium text-[#6e6e73] tracking-wider uppercase mr-1">分类</span>
-          {(['', 'work', 'invest', 'life'] as (string | Category)[]).map(c => {
+          {(['', 'work', 'invest', 'life', 'constitution'] as (string | Category)[]).map(c => {
             const Icon = c ? CATEGORY_ICONS[c as Category] : null
             return (
               <button
@@ -239,7 +240,8 @@ export default function PrincipleList() {
                   <span className={
                     cat === 'work' ? 'text-[#0a84ff]' :
                     cat === 'invest' ? 'text-[#30d158]' :
-                    'text-[#ff9f0a]'
+                    cat === 'life' ? 'text-[#ff9f0a]' :
+                    'text-[#a78bfa]'
                   }>
                     <CategoryIcon size={16} />
                   </span>

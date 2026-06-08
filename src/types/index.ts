@@ -1,5 +1,5 @@
-export type Category = 'work' | 'invest' | 'life';
-export type Status = 'draft' | 'published' | 'deprecated';
+export type Category = 'work' | 'invest' | 'life' | 'constitution';
+export type Status = 'draft' | 'published' | 'deprecated' | 'constitution';
 
 export interface PrincipleVersion {
   id: number;
@@ -81,30 +81,35 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   work: '工作原则',
   invest: '投资原则',
   life: '生活原则',
+  constitution: '原则宪法',
 };
 
 export const CATEGORY_COLORS: Record<Category, string> = {
   work: '#2563eb',
   invest: '#059669',
   life: '#d97706',
+  constitution: '#a78bfa',
 };
 
 export const CATEGORY_BG: Record<Category, string> = {
   work: '#eff6ff',
   invest: '#ecfdf5',
   life: '#fffbeb',
+  constitution: '#faf5ff',
 };
 
 export const CATEGORY_BORDER: Record<Category, string> = {
   work: '#bfdbfe',
   invest: '#a7f3d0',
   life: '#fde68a',
+  constitution: '#e9d5ff',
 };
 
 export const STATUS_LABELS: Record<Status, string> = {
   draft: '草稿',
   published: '已发布',
   deprecated: '已汰换',
+  constitution: '宪法',
 };
 
 // ============================================================
@@ -112,6 +117,7 @@ export const STATUS_LABELS: Record<Status, string> = {
 // ============================================================
 
 export type Effectiveness = 'effective' | 'partial' | 'ineffective';
+export type Adherence = 'followed' | 'violated' | 'not_applicable';
 
 export const EFFECTIVENESS_LABELS: Record<Effectiveness, string> = {
   effective: '✅ 有效',
@@ -123,6 +129,18 @@ export const EFFECTIVENESS_COLORS: Record<Effectiveness, string> = {
   effective: '#30d158',
   partial: '#ff9f0a',
   ineffective: '#ff375f',
+};
+
+export const ADHERENCE_LABELS: Record<Adherence, string> = {
+  followed: '✅ 遵循了原则',
+  violated: '❌ 违背了原则',
+  not_applicable: '➖ 原则不适用',
+};
+
+export const ADHERENCE_COLORS: Record<Adherence, string> = {
+  followed: '#30d158',
+  violated: '#ff375f',
+  not_applicable: '#86868b',
 };
 
 /** 一条决策记录 */
@@ -140,6 +158,8 @@ export interface Review {
   decision_id: string;
   actual_outcome: string;     // 实际结果
   effectiveness: Effectiveness | ''; // 原则有效性
+  adherence: Adherence | '';  // 是否遵循原则
+  violated_reason: string;    // 违背原因（adherence=violated 时）
   reflection: string;         // 反思笔记
   reviewed_at: string;
 }
@@ -166,5 +186,8 @@ export interface PrincipleFeedback {
   effective_count: number;
   partial_count: number;
   ineffective_count: number;
+  followed_count: number;
+  violated_count: number;
+  not_applicable_count: number;
   decisions: DecisionWithReview[];
 }

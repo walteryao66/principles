@@ -32,6 +32,12 @@ const CATEGORY_CONFIG: Record<Category, {
     inactiveClass: 'border-white/[0.06] bg-[#121215] text-[#86868b] hover:border-white/[0.1] hover:text-[#f5f5f7]',
     Icon: IconShield,
   },
+  constitution: {
+    label: '原则宪法',
+    activeClass: 'border-[#a78bfa]/30 bg-[#a78bfa]/10 text-[#a78bfa]',
+    inactiveClass: 'border-white/[0.06] bg-[#121215] text-[#86868b] hover:border-white/[0.1] hover:text-[#f5f5f7]',
+    Icon: IconShield,
+  },
 }
 
 export default function PrincipleEdit() {

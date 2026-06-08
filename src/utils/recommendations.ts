@@ -106,8 +106,8 @@ export function recommendPrinciples(
   if (tokens.length === 0) return [];
 
   const candidates = categoryFilter
-    ? EMBEDDED_PRINCIPLES.filter(p => p.category === categoryFilter && p.status !== 'deprecated')
-    : EMBEDDED_PRINCIPLES.filter(p => p.status !== 'deprecated');
+    ? EMBEDDED_PRINCIPLES.filter(p => p.category === categoryFilter && p.status === 'published')
+    : EMBEDDED_PRINCIPLES.filter(p => p.status === 'published');
 
   const scored = candidates.map(p => {
     const score = computeScore(tokens, p);
@@ -131,7 +131,7 @@ export function recommendPrinciples(
  * 随机获取一条原则（用于每日推荐）
  */
 export function getDailyPrinciple(): Principle | null {
-  const active = EMBEDDED_PRINCIPLES.filter(p => p.status !== 'deprecated');
+  const active = EMBEDDED_PRINCIPLES.filter(p => p.status === 'published');
   if (active.length === 0) return null;
   // 基于日期选择（同一天返回同一条）
   const today = new Date().toISOString().slice(0, 10);

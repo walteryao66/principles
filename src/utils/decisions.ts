@@ -153,11 +153,16 @@ export function getPrincipleFeedback(principleId: number): PrincipleFeedback {
   const related = all.filter(d => d.decision.linked_principle_ids.includes(principleId));
 
   let effective = 0, partial = 0, ineffective = 0;
+  let followed = 0, violated = 0, notApplicable = 0;
   for (const d of related) {
     if (d.review) {
       if (d.review.effectiveness === 'effective') effective++;
       else if (d.review.effectiveness === 'partial') partial++;
       else if (d.review.effectiveness === 'ineffective') ineffective++;
+
+      if (d.review.adherence === 'followed') followed++;
+      else if (d.review.adherence === 'violated') violated++;
+      else if (d.review.adherence === 'not_applicable') notApplicable++;
     }
   }
 
@@ -166,6 +171,9 @@ export function getPrincipleFeedback(principleId: number): PrincipleFeedback {
     effective_count: effective,
     partial_count: partial,
     ineffective_count: ineffective,
+    followed_count: followed,
+    violated_count: violated,
+    not_applicable_count: notApplicable,
     decisions: related,
   };
 }
